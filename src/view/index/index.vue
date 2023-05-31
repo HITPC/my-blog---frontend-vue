@@ -1,12 +1,13 @@
 <template>
   <div class="out">
     <header>
-      <h2 class="logo">PC的个人网站</h2>
+      <router-link class="logo" to="/index">PC的个人网站</router-link>
       <nav class="navigation" ref="navList">
         <router-link to="/index" class="active">主页</router-link>
         <router-link to="/blog">博客</router-link>
         <router-link to="/examples">小实例</router-link>
         <router-link @click="unLogin" to="/login">退出登录</router-link>
+        <a href="https://gitee.com/piao-chen" target="_blank">前往PC仓库</a>
       </nav>
     </header>
 
@@ -34,6 +35,11 @@
         最后，祝玩的开心！
       </p>
     </section>
+
+    <div class="footer-contanier">
+      <span>玩的开心！</span>
+      <span><a href="https://space.bilibili.com/28836808?spm_id_from=333.1007.0.0" target="_blank">点击前往PC的B站首页</a></span>
+    </div>
   </div>
 </template>
 
@@ -66,7 +72,6 @@ export default {
       hill5.style.left = value*1.5+"px";
       hill4.style.left = value*-1.5+"px";
       hill1.style.top = value*1+"px";
-      console.log("a");
     });
 
     for(let i = 0; i<navList.children.length; ++i){
@@ -114,7 +119,8 @@ export default {
   .logo{
     font-size: 2em;
     color: #359381;
-    pointer-events: none;
+    text-decoration: none;
+    font-weight: 600;
   }
 
   .navigation{
@@ -131,9 +137,19 @@ export default {
     color: #359381;
     border-radius: 20px;
     font-weight: 600;
+    margin-left: 3px;
   }
 
-  .navigation a:hover, .navigation .active{
+  .navigation a:last-child{
+    position: absolute;
+    right: 30px;
+    color: white;
+    width: 110px;
+    border: 1px white solid;
+  }
+
+  .navigation a:hover, 
+  .navigation .active{
     background-color: #359381;
     color: #fff;
   }
@@ -178,5 +194,32 @@ export default {
     font-size: 1em;
     color: #fff;
     font-weight: 300;
+  }
+
+  .footer-contanier{
+    display: flex;
+    width: 100vw;
+    height: 40px;
+    background-color: #003329;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .footer-contanier span:first-child{
+    font-size: 12px;
+    font-weight: 500;
+    color: #fff;
+  }
+
+  .footer-contanier span:last-child{
+    line-height: 12px;
+  }
+
+  .footer-contanier>span>a{
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    color: #fff;
+    margin-left: 5px;
   }
 </style>

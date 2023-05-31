@@ -14,7 +14,7 @@ const routes = [
     name: "login",
     path: "/login",
     meta: {title: "登入"},
-    component : () => import("@/view/login")
+    component : () => import("@/view/loginAndRegister")
   },
   {
     name: "404",
