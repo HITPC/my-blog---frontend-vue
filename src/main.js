@@ -9,7 +9,6 @@ import "./style/index.css";
 import ElementPlus from "element-plus";
 //引入element-plusu样式
 import "element-plus/theme-chalk/index.css";
-
 //引入element-plus所用的local
 import locale from "element-plus/lib/locale/lang/zh-cn";
 

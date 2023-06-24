@@ -55,6 +55,7 @@ export default {
     },
 
     slider(){
+      ElMessage.warning('当前未开放注册！注册就是个摆设');
       if(this.$refs["register_box"].classList.contains("slide-up")){
         this.$refs["login_box"].classList.add("slide-up");
         this.$refs["register_box"].classList.remove("slide-up");

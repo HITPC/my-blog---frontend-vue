@@ -37,6 +37,12 @@ const routes = [
     meta: {title: "小实例"},
     component: () => import("@/view/examples")
   },
+  {
+    name: "article",
+    path: "/article/:id", //这样子配置，保证接收参数
+    meta: {title: "文章"},
+    component: () => import("@/view/article")
+  },
   //写在最底部，实现找不到路径跳转到404页面
   {
     path: '/:pathMatch(.*)',

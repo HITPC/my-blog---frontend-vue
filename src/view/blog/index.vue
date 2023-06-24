@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="text-list-container">
-        <div class="article-container" v-for="(article, index) in articleArr" :key="index">
+        <div class="article-container" v-for="(article, index) in articleArr" :key="index"  @click="goDetail(article.id)">
           <h2 class="article-title">{{ article.title }}</h2>
           <span class="article-introdution">{{ article.introduction }}</span>
           <div><span class="article-date">{{ article.date }}</span></div>
@@ -21,6 +21,9 @@
 </template>
 
 <script>
+//引入事件总线
+// import emitter from "../../untils/eventBus";
+
 export default {
   name: 'BlogPage',
   props: {},
@@ -28,30 +31,37 @@ export default {
     return {
       articleArr: [
         {
+          id: "001",
           title: "123",
           introduction: "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest",
           date: "2012-12-31",
         },
         {
+          id: "002",
           title: "asd",
           introduction: "tresad",
           date: "2013-12-30",
         },
         {
+          id: "003",
           title: "asd",
           introduction: "tresad",
           date: "2013-12-30",
         },
         {
+          id: "004",
           title: "asd",
           introduction: "tresad",
           date: "2013-12-30",
         },
         {
+          id: "005",
           title: "asd",
           introduction: "tresad",
           date: "2013-12-30",
-        },{
+        },
+        {
+          id: "006",
           title: "asd",
           introduction: "tresad",
           date: "2013-12-30",
@@ -72,12 +82,15 @@ export default {
     
   },
   methods: {
-    
+    goDetail(id){
+      // 前面是事件名称，后面是要传入的参数
+      this.$router.push({ name: 'article', params: { id: id } });
+    }
   },
   mounted(){
-    window.addEventListener("scroll", ()=>{
+    window.addEventListener("scroll", ()=>{ //监听滚动，实现滚动到最后再去扩展页面内容。
       if((document.documentElement.scrollHeight - document.documentElement.scrollTop-document.documentElement.clientHeight) < 1){
-        console.log("a");
+        console.log("到底部了，应该触发网络请求拿新的内容了。");
       }
     })
   },
