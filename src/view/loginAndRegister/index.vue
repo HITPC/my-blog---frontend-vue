@@ -1,5 +1,6 @@
 <template>
   <div class="out">
+    <router-link to="/index" class="login-link">点我进入主页</router-link>
     <div class="container">
         <div class="register-box slide-up" ref="register_box">
             <h2 class="register-title" @click="slider">
@@ -46,6 +47,9 @@ export default {
   computed: {
    
   },
+  mounted(){
+    ElMessage.warning('此处管理员登录，非管理员请直接点击右上方的进入');
+  },
   methods: {
     slidel(){
       if(this.$refs["login_box"].classList.contains("slide-up")){
@@ -73,7 +77,7 @@ export default {
       }
       //这里加网络请求
       localStorage.setItem("token", "123");
-      this.$router.push("/index");
+      this.$router.push("/manage");
     },
 
     register(){
@@ -266,5 +270,24 @@ export default {
       transform: translate(-50%,0%);
   }
 
+  .login-link{
+    position: absolute;
+    display: inline-block;
+    right: 5%;
+    top: 5%;
+    text-decoration: none;
+    color: #303030;
+    width: 120px;
+    height: 30px;
+    border: 1px solid rgb(166, 190, 246);
+    border-radius: 10px;
+    line-height: 30px;
+    text-align: center;
+    transition: all .2s;
+  }
 
+  .login-link:hover{
+    background-color: rgba(0, 0, 0, .1);
+    color: #fff;
+  }
 </style>

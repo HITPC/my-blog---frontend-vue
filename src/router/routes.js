@@ -11,6 +11,13 @@ const routes = [
     children: []
   },
   {
+    name: "manage",
+    path: "/manage",
+    component: () => import("@/view/manage"),
+    meta: {title: "管理网站"},
+    children: []
+  },
+  {
     name: "login",
     path: "/login",
     meta: {title: "登入"},

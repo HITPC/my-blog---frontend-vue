@@ -11,5 +11,12 @@ import ElementPlus from "element-plus";
 import "element-plus/theme-chalk/index.css";
 //引入element-plus所用的local
 import locale from "element-plus/lib/locale/lang/zh-cn";
+//导入图标
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
-createApp(App).use(router).use(ElementPlus, { locale }).mount('#app');//注意use要在mount之前
+var app = createApp(App);
+app.use(router).use(ElementPlus, { locale }).mount('#app');//注意use要在mount之前
+//全局注册字体图标
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component)
+}

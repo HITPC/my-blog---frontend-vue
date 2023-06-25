@@ -6,12 +6,12 @@ const router = createRouter({
   routes
 });
 
-//配置白名单，名单中的路径无需守卫
-const whiteRouter = ["/login", "/404"];
+//配置黑名单，名单中的路径需要守卫
+const balckRouter = ["/manage"];
 
 //配置前置路由守卫
 router.beforeEach((to, from, next)=>{
-  if(whiteRouter.indexOf(to.path) == -1){//要去的不是白名单中的路由 需要鉴权
+  if(balckRouter.indexOf(to.path) !== -1){//要去的不是黑名单中的路由 不需要鉴权
     let token = localStorage.getItem("token");
     if(token){
       next();
