@@ -6,7 +6,11 @@
         <a href="https://gitee.com/piao-chen" target="_blank">前往PC仓库</a>
     </div>
     <div class="example-items-container">
-      
+      <div class="example-items" v-for="(item, index) in itemArr" :key="index" @click="goExampleDetail(item.id)">
+          <h2>{{ item.title }}</h2>
+          <span>{{ item.introduction }}</span>
+          <p>{{ item.date }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -17,7 +21,20 @@ export default {
   props: {},
   data () {
     return {
-      
+      itemArr: [
+        {
+          id: "001",
+          title: "小米商城",
+          introduction: "小米商城页面（无网络交互版本）",
+          date: "2021-01-23"
+        },
+        {
+          id: "002",
+          title: "音乐可视化",
+          introduction: "音乐可视化小网页",
+          date: "2023-04-23"
+        },
+      ], //小实例数组
     }
   },
   components: {
@@ -33,7 +50,9 @@ export default {
     
   },
   methods: {
-    
+    goExampleDetail(id){//跳转到具体的页面
+      this.$router.push( { name: 'examples-detail', params: { id: id } } );
+    }
   },
 }
 </script>
@@ -46,7 +65,7 @@ export default {
   }
 
   .example-header-container{
-    position: absolute;
+    position: fixed;
     top: 0;
     width: 100vw;
     height: 10vh;
@@ -69,7 +88,38 @@ export default {
     overflow-wrap: break-word;
     left: 50%;
     transform: translateX(-50%);
+  }
+
+  .example-items{
+    position: relative;
+    transition: all .2s;
+    width: 100%;
+    height: 27vh;
+    cursor: pointer;
+    margin-bottom: 40px;
     background-color: #fff;
+    border-radius: 15px;
+  }
+
+  .example-items span,
+  .example-items p,
+  .example-items h2{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .example-items span{
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .example-items p{
+    bottom: 15px;
+  }
+
+  .example-items:hover{
+    box-shadow: 5px 5px 5px gray;
   }
 
   .example-header-container a{

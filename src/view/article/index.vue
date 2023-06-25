@@ -75,6 +75,7 @@ export default {
     overflow-wrap: break-word;
     left: 50%;
     transform: translateX(-50%);
+    border-radius: 10px;
     background-color: #fff;
   }
 

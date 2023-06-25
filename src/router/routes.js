@@ -27,15 +27,18 @@ const routes = [
     path: "/blog",
     meta: {title: "博客"},
     component: () => import("@/view/blog"),
-    children: [
-
-    ],
   },
   {
     name: "examples",
     path: "/examples",
     meta: {title: "小实例"},
-    component: () => import("@/view/examples")
+    component: () => import("@/view/examples"),
+  },
+  {
+    name: "examples-detail",
+    path: "/examples-detail/:id",
+    meta: {title: "实例"},
+    component: () => import("@/view/examples/examples-detail.vue"),
   },
   {
     name: "article",
