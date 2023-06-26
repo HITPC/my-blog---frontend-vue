@@ -6,7 +6,7 @@
         <router-link to="/index" class="active">主页</router-link>
         <router-link to="/blog">博客</router-link>
         <router-link to="/examples">小实例</router-link>
-        <router-link @click="unLogin" to="/login">退出登录</router-link>
+        <router-link to="/manage" style="margin-left: 8px;">管理页面</router-link>
         <a href="https://gitee.com/piao-chen" target="_blank">前往PC仓库</a>
       </nav>
     </header>

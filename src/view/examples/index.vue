@@ -7,7 +7,7 @@
     </div>
     <div class="example-items-container">
       <div class="example-items" v-for="(item, index) in itemArr" :key="index" @click="goExampleDetail(item.id)">
-          <h2>{{ item.title }}</h2>
+          <h2 style="margin-top: 15px;">{{ item.title }}</h2>
           <span>{{ item.introduction }}</span>
           <p>{{ item.date }}</p>
       </div>

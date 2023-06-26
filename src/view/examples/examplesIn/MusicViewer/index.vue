@@ -7,7 +7,7 @@
     <input type="text" class="colorInput" placeholder="输入想要的律动颜色">
     <p class="tip-text">设置成功</p>
     <button class="btn1">确定</button>
-    <button class="btn2">切换为浅色主题</button>
+    <button class="btn2">切换为深色主题</button>
   </div>
 </template>
 

@@ -22,6 +22,8 @@
           <el-menu-item index="2-4-3">item three</el-menu-item>
         </el-sub-menu> -->
       </el-sub-menu>
+      <el-menu-item index="toIndex" @click="goIndex">前去主页</el-menu-item>
+      <el-menu-item index="LoginOut" @click="logout">退出登录</el-menu-item>
     </el-menu>
     <!-- 具体的展示使用组件实现 -->
     <ContentShow :showPart="showPart"></ContentShow>
@@ -31,6 +33,7 @@
 <script>
 import { ref } from 'vue';
 import ContentShow from "./component/content-show.vue"
+import { ElMessage } from 'element-plus';
 export default {
   name: 'ManageWebsitePage',
   props: {},
@@ -54,6 +57,14 @@ export default {
       // console.log(this.showPart);
       // //key为当前选中的菜单
       console.log(key, keyPath);
+    },
+    goIndex(){
+      this.$router.push("/index");
+    },
+    logout(){
+      localStorage.removeItem("token");
+      ElMessage.success("退出登录成功！");
+      this.$router.push("/login");
     }
   },
   created () {

@@ -99,9 +99,71 @@
             </span>
           </template>
         </el-dialog>
-        <div class="changeBlog-caontainer" v-show="showPart==='changeBlog'">
-123
+        <div class="changeBlog-caontainer" v-show="showPart==='changeBlog'&&!isShowEditContent">
+          <h3>修改博客</h3>
+          <span>博客标题：</span>
+          <el-input
+            v-model="textTitle"
+            autosize
+            type="textarea"
+            style="width: 51%; margin-top: 200px; margin-bottom: 30px;"
+            maxlength="25"
+            show-word-limit
+            placeholder="请输入要修改的博客标题"
+          />
+          <div class="addBlog-btn-container">
+            <el-button type="primary" @click="checkEditOK">确定</el-button>
+          </div>
         </div>
+        <div class="changeBlog-caontainer" v-show="showPart==='changeBlog'&&isShowEditContent">
+          <h3>修改博客</h3>
+          <span>博客标题：</span>
+          <el-input
+            v-model="textTitleEdit"
+            autosize
+            type="textarea"
+            style="width: 51%; margin-top: 200px; margin-bottom: 30px;"
+            maxlength="25"
+            show-word-limit
+            placeholder="请输入博客标题"
+          />
+          <!-- <div style="margin: 50px 0"></div> -->
+          <span>博客简介：</span>
+          <el-input
+            v-model="textDescriptionEdit"
+            :autosize="{ minRows: 3, maxRows: 4 }"
+            type="textarea"
+            style="width: 51%; margin-bottom: 30px;"
+            maxlength="120"
+            show-word-limit
+            placeholder="请输入博客简介"
+          />
+          <span>博客内容：</span>
+          <el-input
+            v-model="textContentEdit"
+            :autosize="{ minRows: 8, maxRows: 100 }"
+            type="textarea"
+            style="width: 51%;"
+            placeholder="请输入文章内容"
+          />
+          <div class="addBlog-btn-container">
+            <el-button type="primary" @click="saveChangeBlog">保存</el-button>
+            <el-button type="danger" @click="isShowEditConfirm = true">取消</el-button>
+          </div>
+        </div>
+        <el-dialog v-model="isShowEditConfirm" title="需要确认" width="30%" center>
+          <span>
+            确认取消保存修改的博客内容吗？
+          </span>
+          <template #footer>
+            <span class="dialog-footer">
+              <el-button @click="isShowEditConfirm = false">取消</el-button>
+              <el-button type="primary" @click="cancleChangeBlog">
+                确定
+              </el-button>
+            </span>
+          </template>
+        </el-dialog>
       </div>
   </div>
 </template>
@@ -145,11 +207,18 @@ export default {
           times: '4',
         },
       ],
+      // 新建以及原博客内容的保存
       textTitle: "",
       textDescription: "",
       textContent: "",
+      // 下面的用于保存编辑中的内容
+      textTitleEdit: "",
+      textDescriptionEdit: "",
+      textContentEdit: "",
       isShowCancleConfirm: ref(false),
       isShowDeleteConfirm: ref(false),
+      isShowEditConfirm: ref(false),
+      isShowEditContent: ref(false),
       textToDeleteTitle: "",
     }
   },
@@ -195,6 +264,46 @@ export default {
       this.isShowDeleteConfirm = false;
       ElMessage.success("删除成功！");
     },
+    saveChangeBlog(){
+      if(this.textTitle!==""&&this.textContent!==""&&(this.textContent!==this.textContentEdit||this.textDescription!==this.textDescriptionEdit||this.textTitle!==this.textTitleEdit)){ //这里的条件改为不为空并且内容发生了更改才可发送网络请求出去
+        //发送网络请求塞到数据库里去
+        ElMessage.success("保存成功！");
+      }else{
+        if(this.textTitle===""){
+          ElMessage.error("标题不可为空！");
+        }else if(this.textContent===""){
+          ElMessage.error("内容不可为空！");
+        }else if(this.textContent===this.textContentEdit||this.textDescription===this.textDescriptionEdit||this.textTitle===this.textTitleEdit){
+          ElMessage.error("内容未发生更改！");
+        }
+      }
+    },
+    cancleChangeBlog(){
+      this.isShowEditConfirm = false;
+      this.textContent = "";
+      this.textDescription = "";
+      this.textTitle = "";
+      ElMessage.info("已取消。");
+    },
+    doSearch(){
+      
+      //查询 有的话直接对原文那三个变量进行赋值
+      return true;
+    },
+    checkEditOK(){
+      if(this.textTitle===""){
+        ElMessage.error("未输入标题！");
+        return;
+      }
+      if(this.doSearch()){//查询是不是有这个博客，有的话记得赋值过去
+        this.textContentEdit = this.textContent;
+        this.textDescriptionEdit = this.textDescription;
+        this.textTitleEdit = this.textTitle;
+        this.isShowEditContent = true;
+      }else{
+        ElMessage.error("没有对应标题的博客！");
+      }
+    }
   },
   created () {
     
@@ -290,13 +399,15 @@ export default {
 
   .dataCenter-container h3, 
   .addBlog-container h3, 
-  .deleteBlog-container h3{
+  .deleteBlog-container h3,
+  .changeBlog-caontainer h3{
     position: absolute;
     top: 15%;
   }
 
   .addBlog-container, 
-  .deleteBlog-container{
+  .deleteBlog-container,
+  .changeBlog-caontainer{
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -304,21 +415,25 @@ export default {
   }
 
   .addBlog-container span,
-  .deleteBlog-container span{
+  .deleteBlog-container span,
+  .changeBlog-caontainer span{
     position: absolute;
     left: 18%;
   }
 
   .addBlog-container span:nth-child(2),
-  .deleteBlog-container span{
+  .deleteBlog-container span, 
+  .changeBlog-caontainer span:nth-child(2){
     top: 33%;
   }
 
-  .addBlog-container span:nth-child(4){
+  .addBlog-container span:nth-child(4),
+  .changeBlog-caontainer span:nth-child(4){
     top: 45%;
   }
 
-  .addBlog-container span:nth-child(6){
+  .addBlog-container span:nth-child(6),
+  .changeBlog-caontainer span:nth-child(6){
     top: 70%;
   }
 
