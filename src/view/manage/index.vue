@@ -31,7 +31,6 @@
 </template>
 
 <script>
-import { ref } from 'vue';
 import ContentShow from "./component/content-show.vue"
 import { ElMessage } from 'element-plus';
 export default {
@@ -39,7 +38,7 @@ export default {
   props: {},
   data () {
     return {
-      showPart: ref('main'), //默认值为0，展示LOGO对应的内容
+      showPart: 'main', //默认值为0，展示LOGO对应的内容
     }
   },
   components: {

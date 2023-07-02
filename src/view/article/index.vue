@@ -12,11 +12,6 @@
 </template>
 
 <script>
-//引入事件总线
-// import emitter from "../../untils/eventBus";
-//进行数据更新
-// import { ref } from 'vue';
-
 export default {
   name: 'ArticlePage',
   props: {},

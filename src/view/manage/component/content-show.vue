@@ -169,7 +169,6 @@
 </template>
 
 <script>
-import { ref } from "vue";
 import { ElMessage } from 'element-plus';
 
 export default {
@@ -179,7 +178,7 @@ export default {
   },
   data () {
     return {
-      goodWords: ref(""),
+      goodWords: "",
       iconChoose: 0,
       tableData: [
         {
@@ -215,10 +214,10 @@ export default {
       textTitleEdit: "",
       textDescriptionEdit: "",
       textContentEdit: "",
-      isShowCancleConfirm: ref(false),
-      isShowDeleteConfirm: ref(false),
-      isShowEditConfirm: ref(false),
-      isShowEditContent: ref(false),
+      isShowCancleConfirm: false,
+      isShowDeleteConfirm: false,
+      isShowEditConfirm: false,
+      isShowEditContent: false,
       textToDeleteTitle: "",
     }
   },
