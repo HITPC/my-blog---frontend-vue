@@ -6,22 +6,24 @@
         <a href="https://gitee.com/piao-chen" target="_blank">前往PC仓库</a>
     </div>
     <div class="article-text-container">
-      {{ articleID }}
+      <mdViewer :text="articleID"></mdViewer>
     </div>
   </div>
 </template>
 
 <script>
+import mdViewer from "../../plugins/mdEditor-view.vue";
 export default {
   name: 'ArticlePage',
   props: {},
   data () {
     return {
       articleID: this.$route.params.id,
+      // articleID: "this.$route.params.id",
     }
   },
   components: {
-    
+    mdViewer
   },
   computed: {
     
@@ -70,7 +72,6 @@ export default {
     overflow-wrap: break-word;
     left: 50%;
     transform: translateX(-50%);
-    border-radius: 10px;
     background-color: #fff;
   }
 

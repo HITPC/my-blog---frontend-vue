@@ -21,7 +21,7 @@
             <el-table-column prop="times" label="点击量" />
           </el-table>
         </div>
-        <div class="addBlog-container" v-show="showPart==='addBlog'">
+        <div class="addBlog-container" v-if="showPart==='addBlog'">
           <h3>书写博客</h3>
           <span>博客标题：</span>
           <el-input
@@ -44,14 +44,9 @@
             show-word-limit
             placeholder="请输入博客简介"
           />
-          <span>博客内容：</span>
-          <el-input
-            v-model="textContent"
-            :autosize="{ minRows: 8, maxRows: 100 }"
-            type="textarea"
-            style="width: 51%;"
-            placeholder="请输入文章内容"
-          />
+          <span style="top: 56%;">博客内容：</span>
+          <div style="margin-top: 10px; margin-bottom: 10px; width: 100%;"></div>
+          <mdEditorPage :text="textContent"></mdEditorPage>
           <div class="addBlog-btn-container">
             <el-button type="primary" @click="saveBlog">保存</el-button>
             <el-button type="danger" @click="isShowCancleConfirm = true">取消</el-button>
@@ -115,7 +110,7 @@
             <el-button type="primary" @click="checkEditOK">确定</el-button>
           </div>
         </div>
-        <div class="changeBlog-caontainer" v-show="showPart==='changeBlog'&&isShowEditContent">
+        <div class="changeBlog-caontainer" v-if="showPart==='changeBlog'&&isShowEditContent">
           <h3>修改博客</h3>
           <span>博客标题：</span>
           <el-input
@@ -138,14 +133,9 @@
             show-word-limit
             placeholder="请输入博客简介"
           />
-          <span>博客内容：</span>
-          <el-input
-            v-model="textContentEdit"
-            :autosize="{ minRows: 8, maxRows: 100 }"
-            type="textarea"
-            style="width: 51%;"
-            placeholder="请输入文章内容"
-          />
+          <span style="top: 56%;">博客内容：</span>
+          <div style="margin-top: 10px; margin-bottom: 10px; width: 100%;"></div>
+          <mdEditorPage :text="textContentEdit"></mdEditorPage>
           <div class="addBlog-btn-container">
             <el-button type="primary" @click="saveChangeBlog">保存</el-button>
             <el-button type="danger" @click="isShowEditConfirm = true">取消</el-button>
@@ -170,6 +160,7 @@
 
 <script>
 import { ElMessage } from 'element-plus';
+import mdEditorPage from "../../../plugins/mdEditor.vue";
 
 export default {
   name: 'ContentShow',
@@ -222,7 +213,7 @@ export default {
     }
   },
   components: {
-    
+    mdEditorPage
   },
   computed: {
    

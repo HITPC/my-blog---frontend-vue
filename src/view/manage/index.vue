@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import ContentShow from "./component/content-show.vue"
+import ContentShow from "./component/content-show.vue";
 import { ElMessage } from 'element-plus';
 export default {
   name: 'ManageWebsitePage',
@@ -42,7 +42,7 @@ export default {
     }
   },
   components: {
-    ContentShow
+    ContentShow,
   },
   computed: {
     

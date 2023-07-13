@@ -25,7 +25,7 @@ router.beforeEach((to, from, next)=>{
 
 //后置路由守卫实现标题切换 
 router.afterEach((to) => { 
-  document.title = to.meta.title
+  document.title = to.meta.title;
 });
 
 export default router;

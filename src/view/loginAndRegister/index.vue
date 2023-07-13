@@ -48,7 +48,7 @@ export default {
    
   },
   mounted(){
-    ElMessage.warning('此处管理员登录，非管理员请直接点击右上方的进入');
+    
   },
   methods: {
     slidel(){

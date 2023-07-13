@@ -12,6 +12,9 @@
           <p>{{ item.date }}</p>
       </div>
     </div>
+    <div class="footer-container">
+        <span>{{ lengthNow<lengthMax ? "下滑加载更多" : "已经到底啦" }}</span>
+    </div>
   </div>
 </template>
 
@@ -35,16 +38,19 @@ export default {
           date: "2023-04-23"
         },
       ], //小实例数组
+      lengthMax: 2,
     }
   },
   components: {
-    
+   
   },
   computed: {
-    
+    lengthNow(){
+      return this.itemArr.length;
+    }
   },
   mounted() {
-    //此处发送网络请求，拿到对应id的文章内容。
+    window.addEventListener("scroll", this.dealScroll);
   },
   watch: {
     
@@ -52,8 +58,26 @@ export default {
   methods: {
     goExampleDetail(id){//跳转到具体的页面
       this.$router.push( { name: 'examples-detail', params: { id: id } } );
+    },
+    dealScroll(){
+       //监听滚动，实现滚动到最后再去扩展页面内容。
+      if((document.documentElement.scrollHeight - document.documentElement.scrollTop-document.documentElement.clientHeight) < 1){
+        console.log("到底部了，应该触发网络请求拿新的内容了。");
+        // 注意网络请求的时候判断现在到底多少条了，如果没全部整完，接着发请求，已经全部整完了，不再发了
+        if(this.lengthNow < this.lengthMax){
+          this.articleArr.push({
+              id: "007",
+              title: "asd",
+              introduction: "tresad",
+              date: "2013-12-30",
+          });
+        }
+      }
     }
   },
+  unmounted(){
+    window.removeEventListener("scroll", this.dealScroll);
+  }
 }
 </script>
 
@@ -119,7 +143,7 @@ export default {
   }
 
   .example-items:hover{
-    box-shadow: 5px 5px 5px gray;
+    box-shadow: 5px 5px 5px rgb(201, 201, 201);
   }
 
   .example-header-container a{
@@ -152,5 +176,21 @@ export default {
   }
   .example-header-container a:last-child:hover{
     border-bottom: 3px solid #5999f9;
+  }
+
+  .footer-container{
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 35px;
+    width: 100%;
+    height: 30px;
+    background-color: #e8e5e5;
+  }
+  .footer-container span{
+    padding-bottom: 9px;
+    font-weight: 600;
   }
 </style>
