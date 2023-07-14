@@ -67,7 +67,7 @@ export default {
           date: "2013-12-30",
         },
       ],
-      lengthMax: 5,
+      lengthMax: 8,
     }
   },
   //加载更多的实现可以是下拉然后发后端请求
