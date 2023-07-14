@@ -5,7 +5,7 @@ import axios from "axios";
 const service = axios.create({
     // baseURL: process.env.VUE_APP_BASE_API, // 这里指所有接口请求的“请求地址前缀”，完整请求地址 = 请求地址前缀 + 接口后缀，即 url = baseURL + request url
     timeout: 60000, // 请求超时时间 毫秒
-    // withCredentials: true,   // 异步请求时是否携带cookie
+    withCredentials: true,   // 异步请求时是否携带cookie
     // headers: {   // 设置后端需要的传参类型，如果后端不要求，这没必要设置
     //     "Content-Type": "application/json",
     //     token: "your token",
