@@ -1,6 +1,14 @@
 import axios from "axios";
-// import store from "@/store";
 
+let cookies = document.cookie;
+let temp = cookies.split("=");
+let cookieObj = {};
+for(let i = 0; i < temp.length; ++i){
+    if(temp[i] === "token"){
+        cookieObj[temp[i]] = temp[i+1];
+        break;
+    }
+}
 // 创建并配置一个新的axios
 const service = axios.create({
     // baseURL: process.env.VUE_APP_BASE_API, // 这里指所有接口请求的“请求地址前缀”，完整请求地址 = 请求地址前缀 + 接口后缀，即 url = baseURL + request url
@@ -22,6 +30,11 @@ service.interceptors.request.use(
         // if (tokenInfo && tokenInfo.tokenName) {
         //     config.headers[tokenInfo.tokenName] = tokenInfo.tokenValue; //配置请求token
         // }
+        // 配置请求头，以后每一个请求发出去都会携带请求头
+        const token = cookieObj.token || "";
+        if(token !== ""){
+            config.headers["token"] = token;
+        }
         return config;
     },
     (error) => {
@@ -49,7 +62,7 @@ service.interceptors.response.use(
         }
     },
     (error) => {
-        alert(error.msg || "服务器开小差了呢，请稍后再试~");
+        // alert(error.msg || "服务器开小差了呢，请稍后再试~");
         return Promise.reject(error);
     }
 );

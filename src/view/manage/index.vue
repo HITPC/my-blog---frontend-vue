@@ -15,6 +15,9 @@
         <el-menu-item index="addBlog">新增博客</el-menu-item>
         <el-menu-item index="changeBlog">修改博客</el-menu-item>
         <el-menu-item index="deleteBlog">删除博客</el-menu-item>
+        <el-menu-item index="registerExample">注册小实例</el-menu-item>
+        <el-menu-item index="changeExample">修改小实例</el-menu-item>
+        <el-menu-item index="deleteExample">删除小实例</el-menu-item>
         <!-- <el-sub-menu index="2-4">
           <template #title>item four</template>
           <el-menu-item index="2-4-1">item one</el-menu-item>
@@ -38,7 +41,7 @@ export default {
   props: {},
   data () {
     return {
-      showPart: 'main', //默认值为0，展示LOGO对应的内容
+      showPart: 'main', //默认值为main，展示LOGO对应的内容
     }
   },
   components: {

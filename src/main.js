@@ -14,8 +14,11 @@ import locale from "element-plus/lib/locale/lang/zh-cn";
 //导入图标
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
+// 导入vuex
+import store from './store';
+
 var app = createApp(App);
-app.use(router).use(ElementPlus, { locale }).mount('#app');//注意use要在mount之前
+app.use(router).use(ElementPlus, { locale }).use(store).mount('#app');//注意use要在mount之前
 //全局注册字体图标
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)

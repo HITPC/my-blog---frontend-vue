@@ -154,7 +154,141 @@
             </span>
           </template>
         </el-dialog>
+        <div class="addBlog-container" v-if="showPart==='registerExample'">
+          <h3>注册小实例</h3>
+          <span>小实例标题：</span>
+          <el-input
+            v-model="exampleTitle"
+            autosize
+            type="textarea"
+            style="width: 51%; margin-top: 200px; margin-bottom: 30px;"
+            maxlength="25"
+            show-word-limit
+            placeholder="请输入小实例标题"
+          />
+          <!-- <div style="margin: 50px 0"></div> -->
+          <span>小实例简介：</span>
+          <el-input
+            v-model="exampleDescription"
+            :autosize="{ minRows: 3, maxRows: 4 }"
+            type="textarea"
+            style="width: 51%; margin-bottom: 30px;"
+            maxlength="120"
+            show-word-limit
+            placeholder="请输入小实例简介"
+          />
+          <div class="addBlog-btn-container">
+            <el-button type="primary" @click="saveExample">保存</el-button>
+            <el-button type="danger" @click="isShowExampleConfirm = true">取消</el-button>
+          </div>
+        </div>
+        <el-dialog v-model="isShowExampleConfirm" title="需要确认" width="30%" center>
+          <span>
+            确认取消保存注册内容吗？
+          </span>
+          <template #footer>
+            <span class="dialog-footer">
+              <el-button @click="isShowExampleConfirm = false">取消</el-button>
+              <el-button type="primary" @click="cancleSaveExample">
+                确定
+              </el-button>
+            </span>
+          </template>
+        </el-dialog>
+        <div class="deleteBlog-container" v-show="showPart==='deleteExample'">
+          <h3>删除小实例</h3>
+          <span>小实例标题：</span>
+          <el-input
+            v-model="exampleTitleToDelete"
+            autosize
+            type="textarea"
+            style="width: 51%; margin-top: 200px; margin-bottom: 30px;"
+            maxlength="25"
+            show-word-limit
+            placeholder="请输入要删除的小实例标题"
+          />
+          <div class="deleteBlog-btn-container">
+            <el-button type="primary" @click="showExampleDeleteConfirm">删除</el-button>
+          </div>
+        </div>
+        <el-dialog v-model="isShowExampleDeleteConfirm" title="需要确认" width="30%" center>
+          <span>
+            确认删除小实例“{{ exampleTitleToDelete }}”吗？
+          </span>
+          <template #footer>
+            <span class="dialog-footer">
+              <el-button @click="cancleDeleteExample">取消</el-button>
+              <el-button type="primary" @click="deleteExample">
+                确定
+              </el-button>
+            </span>
+          </template>
+        </el-dialog>
+        <div 
+          class="changeBlog-caontainer" 
+          v-show="showPart==='changeExample'&&!isShowExampleEditContent"
+        >
+          <h3>修改小实例</h3>
+          <span>小实例标题：</span>
+          <el-input
+            v-model="exampleTitleEdit"
+            autosize
+            type="textarea"
+            style="width: 51%; margin-top: 200px; margin-bottom: 30px;"
+            maxlength="25"
+            show-word-limit
+            placeholder="请输入要修改的小实例标题"
+          />
+          <div class="addBlog-btn-container">
+            <el-button type="primary" @click="checkEditExampleOK">确定</el-button>
+          </div>
+        </div>
+        <div 
+          class="changeBlog-caontainer" 
+          v-if="showPart==='changeExample'&&isShowExampleEditContent"
+        >
+          <h3>修改小实例</h3>
+          <span>小实例标题：</span>
+          <el-input
+            v-model="exampleTitleEdit"
+            autosize
+            type="textarea"
+            style="width: 51%; margin-top: 200px; margin-bottom: 30px;"
+            maxlength="25"
+            show-word-limit
+            placeholder="请输入小实例标题"
+          />
+          <!-- <div style="margin: 50px 0"></div> -->
+          <span>小实例简介：</span>
+          <el-input
+            v-model="exampleDescriptionEdit"
+            :autosize="{ minRows: 3, maxRows: 4 }"
+            type="textarea"
+            style="width: 51%; margin-bottom: 30px;"
+            maxlength="120"
+            show-word-limit
+            placeholder="请输入小实例简介"
+          />
+          <div class="addBlog-btn-container">
+            <el-button type="primary" @click="saveChangeExample">保存</el-button>
+            <el-button type="danger" @click="isShowExampleEditConfirm = true">取消</el-button>
+          </div>
+        </div>
+        <el-dialog v-model="isShowExampleEditConfirm" title="需要确认" width="30%" center>
+          <span>
+            确认取消保存修改的小实例内容吗？
+          </span>
+          <template #footer>
+            <span class="dialog-footer">
+              <el-button @click="isShowExampleEditConfirm = false">取消</el-button>
+              <el-button type="primary" @click="cancleChangeExample">
+                确定
+              </el-button>
+            </span>
+          </template>
+        </el-dialog>
       </div>
+
   </div>
 </template>
 
@@ -205,11 +339,20 @@ export default {
       textTitleEdit: "",
       textDescriptionEdit: "",
       textContentEdit: "",
+      exampleTitle: "",
+      exampleDescription: "",
+      exampleTitleEdit: "",
+      exampleDescriptionEdit: "",
+      exampleTitleToDelete: "",
       isShowCancleConfirm: false,
       isShowDeleteConfirm: false,
       isShowEditConfirm: false,
       isShowEditContent: false,
+      isShowExampleConfirm: false,
+      isShowExampleDeleteConfirm: false,
       textToDeleteTitle: "",
+      isShowExampleEditContent: false,
+      isShowExampleEditConfirm: false,
     }
   },
   components: {
@@ -238,6 +381,12 @@ export default {
       this.textTitle = "";
       ElMessage.info("已取消保存。");
     },
+    cancleSaveExample(){
+      this.isShowExampleConfirm = false;
+      this.exampleDescription = "";
+      this.exampleTitle = "";
+      ElMessage.info("已取消保存。");
+    },
     cancleDelete(){
       this.isShowDeleteConfirm = false; 
       ElMessage.info("已取消保存。");
@@ -247,6 +396,13 @@ export default {
         ElMessage.error("请输入要删除博客的标题！");
       }else{
         this.isShowDeleteConfirm = true;
+      }
+    },
+    showExampleDeleteConfirm(){
+      if(this.exampleTitleToDelete === ""){
+        ElMessage.error("请输入要删除小实例的标题！");
+      }else{
+        this.isShowExampleDeleteConfirm = true;
       }
     },
     deleteBlog(){
@@ -268,17 +424,56 @@ export default {
         }
       }
     },
+    saveExample(){
+      if(this.exampleTitle!==""){
+        //发送网络请求塞到数据库里去
+        ElMessage.success("保存成功！");
+      }else{
+        ElMessage.error("标题为空！");
+      }
+    },
+    saveChangeExample(){
+      if(this.exampleTitle!==""&&this.exampleDescription!==""&&(this.exampleTitle!==this.exampleTitleEdit||this.exampleDescription!==this.exampleDescriptionEdit)){ //这里的条件改为不为空并且内容发生了更改才可发送网络请求出去
+        //发送网络请求塞到数据库里去
+        ElMessage.success("保存成功！");
+      }else{
+        if(this.exampleTitleEdit===""){
+          ElMessage.error("标题不可为空！");
+        }else if(this.exampleTitle===this.exampleTitleEdit||this.exampleDescription===this.exampleDescriptionEdit){
+          ElMessage.error("内容未发生更改！");
+        }
+      }
+    },
+    deleteExample(){
+      //发网络请求
+      this.isShowExampleDeleteConfirm = false;
+      ElMessage.success("删除成功！");
+    },
+    cancleDeleteExample(){
+      this.isShowExampleDeleteConfirm = false; 
+      ElMessage.info("已取消删除。");
+    },
     cancleChangeBlog(){
       this.isShowEditConfirm = false;
-      this.textContent = "";
-      this.textDescription = "";
+      this.textContentEdit = "";
+      this.textDescriptionEdit = "";
       this.textTitle = "";
+      ElMessage.info("已取消。");
+    },
+    cancleChangeExample(){
+      this.isShowExampleEditConfirm = false;
+      this.exampleTitleEdit = "";
+      this.exampleDescriptionEdit = "";
       ElMessage.info("已取消。");
     },
     doSearch(){
       
       //查询 有的话直接对原文那三个变量进行赋值
       return true;
+    },
+    doSearchExample(){
+       //查询 有的话直接对原文那三个变量进行赋值
+       return true;
     },
     checkEditOK(){
       if(this.textTitle===""){
@@ -292,6 +487,19 @@ export default {
         this.isShowEditContent = true;
       }else{
         ElMessage.error("没有对应标题的博客！");
+      }
+    },
+    checkEditExampleOK(){
+      if(this.exampleTitle===""){
+        ElMessage.error("未输入标题！");
+        return;
+      }
+      if(this.doSearchExample()){//查询是不是有这个博客，有的话记得赋值过去
+        this.exampleDescriptionEdit = this.exampleDescription;
+        this.exampleTitleEdit = this.exampleTitle;
+        this.isShowExampleEditContent = true;
+      }else{
+        ElMessage.error("没有对应标题的小实例！");
       }
     }
   },

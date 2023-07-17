@@ -11,7 +11,7 @@
                 <input type="password" placeholder="密码" v-model="registerPassword">
                 <input type="password" placeholder="确认密码" v-model="registerPasswordAgain">
             </div>
-            <button @click="register">注册</button>
+            <button @click="register" v-if="isRegisterOnline">注册</button>
         </div>
         <div class="login-box" ref="login_box">
             <div class="center">
@@ -31,7 +31,9 @@
 
 <script>
 import { ElMessage } from 'element-plus';
-
+// import  useUserStore  from "../../store/useUserStore";
+import { doLogin, doRegister } from "../../API/loginAndRegister";
+ 
 export default {
   name: 'LoginPage',
   props: {},
@@ -41,7 +43,8 @@ export default {
       loginPassword: "",
       registerUsername: "",
       registerPassword: "",
-      registerPasswordAgain: ""
+      registerPasswordAgain: "",
+      isRegisterOnline: false // 是否开放注册
     }
   },
   computed: {
@@ -55,14 +58,18 @@ export default {
       if(this.$refs["login_box"].classList.contains("slide-up")){
         this.$refs["register_box"].classList.add("slide-up");
         this.$refs["login_box"].classList.remove("slide-up");
+        this.registerUsername = this.registerPassword = "";
       }
     },
 
     slider(){
-      ElMessage.warning('当前未开放注册！注册就是个摆设');
+      if(!this.isRegisterOnline){
+        ElMessage.warning('当前未开放注册！注册就是个摆设');
+      }
       if(this.$refs["register_box"].classList.contains("slide-up")){
         this.$refs["login_box"].classList.add("slide-up");
         this.$refs["register_box"].classList.remove("slide-up");
+        this.loginUsername = this.loginPassword = "";
       }
     },
 
@@ -76,8 +83,22 @@ export default {
         return;
       }
       //这里加网络请求
-      localStorage.setItem("token", "123");
-      this.$router.push("/manage");
+      // localStorage.setItem("token", "123");
+      doLogin({
+        username: this.loginUsername,
+        password: this.loginPassword
+      }).then((res)=>{
+        if(res.code === "200"){
+          this.$store.commit("setToken", res.data);
+          this.$store.commit("setUserName", this.loginUsername); // 将username扔到用户名里面去
+          this.$router.push("/manage"); // 页面跳转
+        }else{
+          ElMessage.error("登录失败。");
+        }
+      }).catch((error)=>{
+        ElMessage.error("登录失败。");
+        console.log(error);
+      });
     },
 
     register(){
@@ -97,7 +118,23 @@ export default {
         ElMessage.error('两次输入的密码不一致！');
         return;
       }
-      //这里加网络请求
+      // 这里加网络请求
+      doRegister({
+        username: this.registerUsername,
+        password: this.registerPassword,
+        isOnline: this.isRegisterOnline
+      }).then((res)=>{
+        if(res.code === "200"){
+          ElMessage.success("注册成功！");
+          this.slidel();
+        }else{
+          ElMessage.error("注册失败！");
+        }
+
+      }).catch((error)=>{
+        ElMessage.error("注册失败！");
+        console.log(error);
+      });
     },
   },
 }
