@@ -90,7 +90,7 @@ export default {
     dealScroll(){
       //监听滚动，实现滚动到最后再去扩展页面内容。
       if((document.documentElement.scrollHeight - document.documentElement.scrollTop-document.documentElement.clientHeight) < 1){
-        console.log("到底部了，应该触发网络请求拿新的内容了。");
+        // console.log("到底部了，应该触发网络请求拿新的内容了。");
         // 注意网络请求的时候判断现在到底多少条了，如果没全部整完，接着发请求，已经全部整完了，不再发了
         if(this.lengthNow < this.lengthMax){
           this.articleArr.push({

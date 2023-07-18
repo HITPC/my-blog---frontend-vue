@@ -54,19 +54,20 @@ export default {
     
   },
   methods: {
-    handleSelect(key, keyPath) {
+    handleSelect(key) { // keyPath  待选参数
       this.showPart = key;
       // console.log(this.showPart);
       // //key为当前选中的菜单
-      console.log(key, keyPath);
+      // console.log(key, keyPath);
     },
     goIndex(){
       this.$router.push("/index");
     },
     logout(){
-      localStorage.removeItem("token");
+      // 删除cookie
+      document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
       ElMessage.success("退出登录成功！");
-      this.$router.push("/login");
+      this.$router.push("/index");
     }
   },
   created () {

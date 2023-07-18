@@ -82,13 +82,11 @@ export default {
         ElMessage.error('密码不能为空！');
         return;
       }
-      //这里加网络请求
-      // localStorage.setItem("token", "123");
       doLogin({
         username: this.loginUsername,
         password: this.loginPassword
       }).then((res)=>{
-        if(res.code === "200"){
+        if(res.code === 200){
           this.$store.commit("setToken", res.data);
           this.$store.commit("setUserName", this.loginUsername); // 将username扔到用户名里面去
           this.$router.push("/manage"); // 页面跳转
@@ -96,8 +94,11 @@ export default {
           ElMessage.error("登录失败。");
         }
       }).catch((error)=>{
-        ElMessage.error("登录失败。");
-        console.log(error);
+        if(error.response.data.code === 502){
+          ElMessage.error("账号或密码错误！");
+        }else{
+          ElMessage.error("服务器错误！");
+        }
       });
     },
 
@@ -124,7 +125,7 @@ export default {
         password: this.registerPassword,
         isOnline: this.isRegisterOnline
       }).then((res)=>{
-        if(res.code === "200"){
+        if(res.code === 200){
           ElMessage.success("注册成功！");
           this.slidel();
         }else{
@@ -132,8 +133,14 @@ export default {
         }
 
       }).catch((error)=>{
-        ElMessage.error("注册失败！");
-        console.log(error);
+        let code = error.response.data.code;
+        if(code === 505){
+          ElMessage.success("当前未开放注册！");
+        }else if(code === 501){
+          ElMessage.success("用户名已存在，请更换用户名！");
+        }else {
+          ElMessage.success("服务器错误！");
+        }
       });
     },
   },
