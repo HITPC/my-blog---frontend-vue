@@ -1,14 +1,17 @@
 import axios from "axios";
 
 let cookies = document.cookie;
-let temp = cookies.split("=");
+let temp = cookies.split(";");
 let cookieObj = {};
-for(let i = 0; i < temp.length; ++i){
-    if(temp[i] === "token"){
-        cookieObj[temp[i]] = temp[i+1];
-        break;
+temp.forEach((item)=>{
+    let tArr = item.split("=");
+    for(let i = 0; i < tArr.length-1; ++i){
+    if(tArr[i].charAt(0) === " "){
+        tArr[i] = tArr[i].slice(1);
     }
-}
+    cookieObj[tArr[i]] = tArr[i+1];
+    }
+});
 // 创建并配置一个新的axios
 const service = axios.create({
     // baseURL: process.env.VUE_APP_BASE_API, // 这里指所有接口请求的“请求地址前缀”，完整请求地址 = 请求地址前缀 + 接口后缀，即 url = baseURL + request url

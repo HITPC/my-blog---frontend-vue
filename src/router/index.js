@@ -12,19 +12,19 @@ const balckRouter = ["/manage"];
 //配置前置路由守卫
 router.beforeEach((to, from, next)=>{
   if(balckRouter.indexOf(to.path) !== -1){//要去的不是黑名单中的路由 不需要鉴权
-    // 下面是仅仅为了这一个而服务的cookie处理，还应该处理掉分号的（也就是这个处理方式是不对的）
+    // 下面的没处理掉重名cookie变数组
     let cookies = document.cookie;
-    let temp = cookies.split("=");
+    let temp = cookies.split(";");
     let cookieObj = {};
-    for(let i = 0; i < temp.length; ++i){
-      if(temp[i] === "token"){
-        cookieObj[temp[i]] = temp[i+1];
-        break;
+    temp.forEach((item)=>{
+      let tArr = item.split("=");
+      for(let i = 0; i < tArr.length-1; ++i){
+        if(tArr[i].charAt(0) === " "){
+          tArr[i] = tArr[i].slice(1);
+        }
+        cookieObj[tArr[i]] = tArr[i+1];
       }
-    }
-    // for(let i = 0; i < temp.length-1; ++i){
-    //   cookieObj[temp[i]] = temp[i+1]; // 将cookie由字符串转为对象（粗糙版，同名应该数组，并且处理分号）
-    // }
+    });
     if(cookieObj.token && cookieObj.token !== ""){
       next();
     }else{
