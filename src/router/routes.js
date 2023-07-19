@@ -53,6 +53,12 @@ const routes = [
     meta: {title: "文章"},
     component: () => import("@/view/article")
   },
+  {
+    name: "search",
+    path: "/search", 
+    meta: {title: "搜索"},
+    component: () => import("@/view/search")
+  },
   //写在最底部，实现找不到路径跳转到404页面
   {
     path: '/:pathMatch(.*)',

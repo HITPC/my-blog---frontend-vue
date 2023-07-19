@@ -6,19 +6,22 @@
         <a href="https://gitee.com/piao-chen" target="_blank">前往PC仓库</a>
     </div>
     <div class="article-text-container">
-      <mdViewer :text="articleID"></mdViewer>
+      <mdViewer :text="content"></mdViewer>
     </div>
   </div>
 </template>
 
 <script>
+import { getBlog } from '@/API/blog';
 import mdViewer from "../../plugins/mdEditor-view.vue";
+
 export default {
   name: 'ArticlePage',
   props: {},
   data () {
     return {
       articleID: this.$route.params.id,
+      content: ""
       // articleID: "this.$route.params.id",
     }
   },
@@ -30,6 +33,11 @@ export default {
   },
   mounted() {
     //此处发送网络请求，拿到对应id的文章内容。
+    getBlog({id: this.articleID}).then((data)=>{
+      this.content = data.data;
+    }).catch((error)=>{
+      console.log(error);
+    });
   },
   watch: {
     

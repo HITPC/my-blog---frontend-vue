@@ -14,11 +14,11 @@
         <div class="dataCenter-container" v-show="showPart==='dataCenter'">
           <h3>数据中心</h3>
           <!-- 构思的是展示哪一个小实例，那一篇文章被点击的最多，点击次数为多少 -->
-          <el-table :data="tableData" :border="true" style="width: 70%; margin-top: 15%;">
-            <el-table-column prop="no" label="排名" width="180" />
+          <el-table :data="rangeArr" :border="true" style="width: 70%; margin-top: 15%;">
+            <el-table-column type="index" width="180" />
             <el-table-column prop="type" label="类型" width="180" />
             <el-table-column prop="title" label="标题" width="180" />
-            <el-table-column prop="times" label="点击量" />
+            <el-table-column prop="visistorNumber" label="点击量" />
           </el-table>
         </div>
         <div class="addBlog-container" v-if="showPart==='addBlog'">
@@ -295,6 +295,7 @@
 <script>
 import { ElMessage } from 'element-plus';
 import mdEditorPage from "../../../plugins/mdEditor.vue";
+import { getClickRange } from '@/API/common';
 
 export default {
   name: 'ContentShow',
@@ -305,32 +306,7 @@ export default {
     return {
       goodWords: "",
       iconChoose: 0,
-      tableData: [
-        {
-          no: '1',
-          type: '博客',
-          title: "test",
-          times: '1234',
-        },
-        {
-          no: '2',
-          type: '小实例',
-          title: "test",
-          times: '124',
-        },
-        {
-          no: '3',
-          type: '博客',
-          title: "test",
-          times: '34',
-        },
-        {
-          no: '4',
-          type: '博客',
-          title: "test",
-          times: '4',
-        },
-      ],
+      rangeArr: [],
       // 新建以及原博客内容的保存
       textTitle: "",
       textDescription: "",
@@ -532,6 +508,19 @@ export default {
       this.iconChoose = 5;
       this.$refs["mainC"].classList.add("beforemorning");
     }
+
+    getClickRange({rank: 10}).then((data)=>{
+      let tempArr = data.data;
+      tempArr.forEach((item)=>{
+        this.rangeArr.push({
+          type: item.type==="blog" ? "博客" : "小实例",
+          title: item.title,
+          visistorNumber: item.visistorNumber
+        });
+      });
+    }).catch((error)=>{
+      console.log(error);
+    });
   },
 }
 </script>

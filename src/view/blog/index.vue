@@ -2,25 +2,35 @@
   <div class="out">
       <div class="out-header">
         <div class="header-container">
-         <router-link to="/index">PC的个人网站</router-link>
+          <router-link to="/index">PC的个人网站</router-link>
           <router-link to="/examples">小实例</router-link>
+          <router-link to="/search">搜索</router-link>
           <a href="https://gitee.com/piao-chen" target="_blank">前往PC仓库</a>
         </div>
+        
       </div>
-      <div class="text-list-container">
-        <div class="article-container" v-for="(article, index) in articleArr" :key="index"  @click="goDetail(article.id)">
+      <div class="text-list-container" v-if="articleArr.length > 0">
+        <div class="article-container"
+          v-for="(article) in articleArr"
+          :key="article.id"  
+          @click="goDetail(article.id)"
+        >
           <h2 class="article-title">{{ article.title }}</h2>
-          <span class="article-introdution">{{ article.introduction }}</span>
+          <span class="article-introdution">{{ article.description }}</span>
           <div><span class="article-date">{{ article.date }}</span></div>
         </div>
       </div>
-      <div class="footer-container">
+      <div class="text-list-container" v-else>
+        <span class="text-nodata">暂时没有数据哦</span>
+      </div>
+      <div class="footer-container" v-if="articleArr.length > 0">
         <span>{{ lengthNow<lengthMax ? "下滑加载更多" : "已经到底啦" }}</span>
       </div>
   </div>
 </template>
 
 <script>
+import { getBlogList } from '@/API/blog';
 //引入事件总线
 // import emitter from "../../untils/eventBus";
 
@@ -30,44 +40,11 @@ export default {
   data () {
     return {
       articleArr: [
-        {
-          id: "001",
-          title: "123",
-          introduction: "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest",
-          date: "2012-12-31",
-        },
-        {
-          id: "002",
-          title: "asd",
-          introduction: "tresad",
-          date: "2013-12-30",
-        },
-        {
-          id: "003",
-          title: "asd",
-          introduction: "tresad",
-          date: "2013-12-30",
-        },
-        {
-          id: "004",
-          title: "asd",
-          introduction: "tresad",
-          date: "2013-12-30",
-        },
-        {
-          id: "005",
-          title: "asd",
-          introduction: "tresad",
-          date: "2013-12-30",
-        },
-        {
-          id: "006",
-          title: "asd",
-          introduction: "tresad",
-          date: "2013-12-30",
-        },
+        
       ],
-      lengthMax: 8,
+      lengthMax: 0,
+      pageNow: 1,
+      pageSize: 5,
     }
   },
   //加载更多的实现可以是下拉然后发后端请求
@@ -93,11 +70,15 @@ export default {
         // console.log("到底部了，应该触发网络请求拿新的内容了。");
         // 注意网络请求的时候判断现在到底多少条了，如果没全部整完，接着发请求，已经全部整完了，不再发了
         if(this.lengthNow < this.lengthMax){
-          this.articleArr.push({
-              id: "007",
-              title: "asd",
-              introduction: "tresad",
-              date: "2013-12-30",
+          ++this.pageNow;
+          getBlogList({page: this.pageNow, pageSize: this.pageSize}).then((data)=>{
+            let responseObj = data.data;
+            this.lengthMax = responseObj.maxLength;
+            responseObj.list.forEach((item)=>{
+              this.articleArr.push(item);
+            });
+          }).catch((error)=>{
+            console.log(error);
           });
         }
       }
@@ -105,6 +86,15 @@ export default {
   },
   mounted(){
     window.addEventListener("scroll", this.dealScroll);
+    getBlogList({page: this.pageNow, pageSize: this.pageSize}).then((data)=>{
+      let responseObj = data.data;
+      this.lengthMax = responseObj.maxLength;
+      responseObj.list.forEach((item)=>{
+        this.articleArr.push(item);
+      });
+    }).catch((error)=>{
+      console.log(error);
+    });
   },
   unmounted(){
     window.removeEventListener("scroll", this.dealScroll);
@@ -158,6 +148,11 @@ export default {
     left: 26%;
   }
 
+  .header-container a:nth-child(3){
+    padding: 8px;
+    right: 5%;
+  }
+
   .header-container a:last-child{
     padding: 8px;
     left: 33%;
@@ -167,6 +162,10 @@ export default {
     border-bottom: 3px solid #5999f9;
   }
   .header-container a:last-child:hover{
+    border-bottom: 3px solid #5999f9;
+  }
+
+  .header-container a:nth-child(3):hover{
     border-bottom: 3px solid #5999f9;
   }
 
@@ -223,5 +222,14 @@ export default {
   .article-date{
     position: relative;
     top: 110px;
+  }
+
+  .text-nodata{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #000;
+    font-weight: 600;
+    font-size: 3vh;
   }
 </style>
