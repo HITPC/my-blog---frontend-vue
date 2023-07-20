@@ -99,7 +99,7 @@ export default {
         this.$router.push({ name: 'article', params: { id: result.id } });
       }else if(result.type === "example"){
         visitExample({id: result.id}).then(()=>{
-          this.$router.push( { name: 'examples-detail', params: { id: result.id } } );
+          window.open(`/examples-detail/${result.id}`, "_blank"); // 打开新页面进行跳转
         }).catch((error)=>{
           console.log(error);
         });
