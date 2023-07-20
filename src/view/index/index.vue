@@ -74,7 +74,7 @@ export default {
       hill1.style.top = value*1+"px";
     });
 
-    for(let i = 0; i<navList.children.length; ++i){
+    for(let i = 0; i<navList.children.length-1; ++i){
       navList.children[i].addEventListener("click", (e)=>{
         //先去掉
         for(let i = 0; i<navList.children.length; ++i){
