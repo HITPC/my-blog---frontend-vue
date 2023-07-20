@@ -23,6 +23,9 @@
         搜索
         <el-icon class="el-icon--right"><Search /></el-icon>
       </el-button>
+      <el-button type="info" size="large" @click="goBack">
+        返回上一页面
+      </el-button>
     </div>
     <div class="result-container">
       <div class="result-item-container"
@@ -103,6 +106,9 @@ export default {
       }else{
         ElMessage.error("页面错误！请联系管理员。");
       }
+    },
+    goBack(){
+      window.history.go(-1);
     }
   },
   created () {

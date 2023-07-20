@@ -568,8 +568,8 @@ export default {
         ElMessage.error("未输入标题！");
         return;
       }
-      let res = await this.doSearch(this.textTitle, "blog")
-      if(res){//查询是不是有这个博客，有的话记得赋值过去
+      let res = await this.doSearch(this.textTitle, "blog");
+      if(res && res !== "add-no-repeat"){//查询是不是有这个博客，有的话记得赋值过去
         this.textContent = this.searchResult.content;
         this.textDescription = this.searchResult.description;
         this.textTitle = this.searchResult.title;
@@ -587,7 +587,7 @@ export default {
         return;
       }
       let res = await this.doSearch(this.exampleTitle, "example");
-      if(res){//查询是不是有这个博客，有的话记得赋值过去
+      if(res && res !== "add-no-repeat"){//查询是不是有这个博客，有的话记得赋值过去
         this.exampleDescriptionEdit = this.searchResult.description;
         this.exampleTitleEdit = this.searchResult.title;
         this.exampleTitle = this.searchResult.title;

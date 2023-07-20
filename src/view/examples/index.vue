@@ -62,7 +62,8 @@ export default {
   methods: {
     goExampleDetail(id){//跳转到具体的页面
       visitExample({id}).then(()=>{
-        this.$router.push( { name: 'examples-detail', params: { id } } );
+        window.open(`/examples-detail/${id}`, "_blank"); // 打开新页面进行跳转
+        // this.$router.push( { name: 'examples-detail', params: { id } } );
       }).catch((error)=>{
         console.log(error);
       });

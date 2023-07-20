@@ -3,6 +3,7 @@
     <div class="article-header-container">
         <router-link to="/index">PC的个人网站</router-link>
         <router-link to="/examples">小实例</router-link>
+        <router-link to="/blog">返回</router-link>
         <a href="https://gitee.com/piao-chen" target="_blank">前往PC仓库</a>
     </div>
     <div class="article-text-container">
@@ -50,15 +51,16 @@ export default {
 
 <style scoped>
   .article-container{
-    min-height: 100vh;
+    min-height: 100%;
     position: relative;
-    background-color: #e8e5e5;
+    /* 解决不了内容比背景色多一截的问题了，那就解决背景色吧 */
+    /* background-color: #e8e5e5; */
   }
 
   .article-header-container{
     position: absolute;
     top: 0;
-    width: 100vw;
+    width: 100%;
     height: 10vh;
   }
 
@@ -76,20 +78,20 @@ export default {
     margin: 0 auto;
     transform: translateY(20vh);
     width: 70vw;
-    min-height: 79vh;
+    min-height: 69vh;
     background-color: #fff;
   }
 
   .article-header-container a{
-    position: absolute;
-    bottom: 1vh;
-    text-decoration: none;
-    color: black;
-    font-size: 21px;
-    border-bottom: 3px solid transparent; /* 添加透明边框 */
-  }
+    position:absolute;
+    bottom:1vh;
+    text-decoration:none;
+    color:black;
+    font-size:21px;
+    border-bottom:3px solid transparent; /* 添加透明边框 */
+}
 
-  .article-header-container a:first-child{
+.article-header-container a:first-child{
     left: 6%;
     font-size: 32px;
     font-weight: 600;
@@ -98,6 +100,15 @@ export default {
   .article-header-container a:nth-child(2){
     padding: 8px;
     left: 26%;
+  }
+
+  .article-header-container a:nth-child(3){
+    padding: 8px;
+    right: 5%;
+  }
+
+  .article-header-container a:nth-child(3):hover{
+    border-bottom: 3px solid #5999f9;
   }
 
   .article-header-container a:last-child{
