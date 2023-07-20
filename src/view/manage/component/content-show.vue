@@ -46,7 +46,7 @@
           />
           <span style="top: 56%;">博客内容：</span>
           <div style="margin-top: 10px; margin-bottom: 10px; width: 100%;"></div>
-          <mdEditorPage :text="textContent"></mdEditorPage>
+          <mdEditorPage type="add"></mdEditorPage>
           <div class="addBlog-btn-container">
             <el-button type="primary" @click="saveBlog">保存</el-button>
             <el-button type="danger" @click="isShowCancleConfirm = true">取消</el-button>
@@ -135,10 +135,11 @@
           />
           <span style="top: 56%;">博客内容：</span>
           <div style="margin-top: 10px; margin-bottom: 10px; width: 100%;"></div>
-          <mdEditorPage :text="textContentEdit"></mdEditorPage>
+          <mdEditorPage :text="textContentEdit" type="edit"></mdEditorPage>
           <div class="addBlog-btn-container">
             <el-button type="primary" @click="saveChangeBlog">保存</el-button>
             <el-button type="danger" @click="isShowEditConfirm = true">取消</el-button>
+            <el-button type="danger" @click="isShowEditContent = false">返回</el-button>
           </div>
         </div>
         <el-dialog v-model="isShowEditConfirm" title="需要确认" width="30%" center>
@@ -231,7 +232,7 @@
           <h3>修改小实例</h3>
           <span>小实例标题：</span>
           <el-input
-            v-model="exampleTitleEdit"
+            v-model="exampleTitle"
             autosize
             type="textarea"
             style="width: 51%; margin-top: 200px; margin-bottom: 30px;"
@@ -272,6 +273,7 @@
           <div class="addBlog-btn-container">
             <el-button type="primary" @click="saveChangeExample">保存</el-button>
             <el-button type="danger" @click="isShowExampleEditConfirm = true">取消</el-button>
+            <el-button type="danger" @click="this.isShowExampleEditContent = false">返回</el-button>
           </div>
         </div>
         <el-dialog v-model="isShowExampleEditConfirm" title="需要确认" width="30%" center>
@@ -295,7 +297,9 @@
 <script>
 import { ElMessage } from 'element-plus';
 import mdEditorPage from "../../../plugins/mdEditor.vue";
-import { getClickRange } from '@/API/common';
+import { getClickRange, search } from '@/API/common';
+import { addBlog, changeBlog, deleteBlog } from '@/API/blog';
+import { addExample, changeExample, deleteExample } from '@/API/example';
 
 export default {
   name: 'ContentShow',
@@ -329,6 +333,7 @@ export default {
       textToDeleteTitle: "",
       isShowExampleEditContent: false,
       isShowExampleEditConfirm: false,
+      searchResult: {}, // 查询到的对象
     }
   },
   components: {
@@ -341,14 +346,32 @@ export default {
     
   },
   methods: {
-    saveBlog(){
+    async saveBlog(){
       if(this.textTitle!==""&&this.textContent!==""){
         //发送网络请求塞到数据库里去
-        ElMessage.success("保存成功！");
+       const res = await this.doSearch(this.textTitle, "blog");
+        if(res !== "add-no-repeat"){
+          ElMessage.error("数据库错误或存在同名博客！请检查名字不要冲突！");
+        }else{
+          addBlog({
+            title: this.textTitle,
+            description: this.textDescription,
+            content: this.textContent
+          }).then((data)=>{
+            if(data.code === 200){
+              this.textTitle = this.textContent = this.textDescription = "";
+              ElMessage.success("保存成功！");
+            }else{
+              ElMessage.error("保存失败！");
+            }
+          }).catch((error)=>{
+              ElMessage.error("保存失败！");
+              console.log(error);
+          });
+        }
       }else{
         ElMessage.error("标题或内容为空！");
       }
-      
     },
     cancleSaveBlog(){
       this.isShowCancleConfirm = false;
@@ -381,29 +404,78 @@ export default {
         this.isShowExampleDeleteConfirm = true;
       }
     },
-    deleteBlog(){
-      //发网络请求
-      this.isShowDeleteConfirm = false;
-      ElMessage.success("删除成功！");
+    async deleteBlog(){
+      let res = await this.doSearch(this.textToDeleteTitle, "blog");
+      if(res){
+        //发网络请求
+        deleteBlog({
+          id: this.searchResult.id
+        }).then((data)=>{
+          if(data.code == 200){
+            this.isShowDeleteConfirm = false;
+            ElMessage.success("删除成功！");
+            this.textToDeleteTitle = "";
+          }else{
+            this.isShowDeleteConfirm = false;
+            ElMessage.error("删除失败！");
+          }
+        }).catch((error)=>{
+          ElMessage.error("删除失败！");
+          console.log(error);
+        });
+      }else{
+        ElMessage.error("要删除的博客不存在！");
+      }
     },
     saveChangeBlog(){
-      if(this.textTitle!==""&&this.textContent!==""&&(this.textContent!==this.textContentEdit||this.textDescription!==this.textDescriptionEdit||this.textTitle!==this.textTitleEdit)){ //这里的条件改为不为空并且内容发生了更改才可发送网络请求出去
-        //发送网络请求塞到数据库里去
-        ElMessage.success("保存成功！");
+      if(this.textTitleEdit!==""&&this.textContentEdit!==""&&(this.textContent!==this.textContentEdit||this.textDescription!==this.textDescriptionEdit||this.textTitle!==this.textTitleEdit)){ //这里的条件改为不为空并且内容发生了更改才可发送网络请求出去
+        //发送网络请求塞到数据库里去 
+        changeBlog({
+          id: this.searchResult.id,
+          title: this.textTitleEdit,
+          description: this.textDescriptionEdit,
+          content: this.textContentEdit
+        }).then((data)=>{
+          if(data.code == 200){
+            ElMessage.success("保存成功！");
+            this.textContentEdit = this.textTitleEdit = this.textDescriptionEdit = "";
+          }
+        }).catch((error)=>{
+          ElMessage.error("保存失败！");
+          console.log(error);
+        });
       }else{
-        if(this.textTitle===""){
+        if(this.textTitleEdit===""){
           ElMessage.error("标题不可为空！");
-        }else if(this.textContent===""){
+        }else if(this.textContentEdit===""){
           ElMessage.error("内容不可为空！");
         }else if(this.textContent===this.textContentEdit||this.textDescription===this.textDescriptionEdit||this.textTitle===this.textTitleEdit){
           ElMessage.error("内容未发生更改！");
         }
       }
     },
-    saveExample(){
+    async saveExample(){
       if(this.exampleTitle!==""){
         //发送网络请求塞到数据库里去
-        ElMessage.success("保存成功！");
+        const res = await this.doSearch(this.exampleTitle, "example");
+        if(res !== "add-no-repeat"){
+          ElMessage.error("存在同名小实例！请检查名字不要冲突！");
+        }else{
+          addExample({
+            title: this.exampleTitle,
+            description: this.exampleDescription,
+          }).then((data)=>{
+            if(data.code === 200){
+              this.exampleTitle = this.exampleDescription = "";
+              ElMessage.success("保存成功！");
+            }else{
+              ElMessage.error("保存失败！");
+            }
+          }).catch((error)=>{
+              ElMessage.error("保存失败！");
+              console.log(error);
+          });
+        }
       }else{
         ElMessage.error("标题为空！");
       }
@@ -411,7 +483,19 @@ export default {
     saveChangeExample(){
       if(this.exampleTitle!==""&&this.exampleDescription!==""&&(this.exampleTitle!==this.exampleTitleEdit||this.exampleDescription!==this.exampleDescriptionEdit)){ //这里的条件改为不为空并且内容发生了更改才可发送网络请求出去
         //发送网络请求塞到数据库里去
-        ElMessage.success("保存成功！");
+        changeExample({
+          id: this.searchResult.id,
+          title: this.exampleTitleEdit,
+          description: this.exampleDescriptionEdit,
+        }).then((data)=>{
+          if(data.code == 200){
+            ElMessage.success("保存成功！");
+            this.exampleTitleEdit = this.exampleDescriptionEdit = "";
+          }
+        }).catch((error)=>{
+          ElMessage.error("保存失败！");
+          console.log(error);
+        });
       }else{
         if(this.exampleTitleEdit===""){
           ElMessage.error("标题不可为空！");
@@ -420,10 +504,29 @@ export default {
         }
       }
     },
-    deleteExample(){
+    async deleteExample(){
       //发网络请求
-      this.isShowExampleDeleteConfirm = false;
-      ElMessage.success("删除成功！");
+      let res = await this.doSearch(this.exampleTitleToDelete, "example");
+      if(res){
+        //发网络请求
+        deleteExample({
+          id: this.searchResult.id
+        }).then((data)=>{
+          if(data.code == 200){
+            this.isShowExampleDeleteConfirm = false;
+            ElMessage.success("删除成功！");
+            this.exampleTitleToDelete = "";
+          }else{
+            this.isShowExampleDeleteConfirm = false;
+            ElMessage.error("删除失败！");
+          }
+        }).catch((error)=>{
+          ElMessage.error("删除失败！");
+          console.log(error);
+        });
+      }else{
+        ElMessage.error("要删除的小实例不存在！");
+      }
     },
     cancleDeleteExample(){
       this.isShowExampleDeleteConfirm = false; 
@@ -442,37 +545,53 @@ export default {
       this.exampleDescriptionEdit = "";
       ElMessage.info("已取消。");
     },
-    doSearch(){
-      
-      //查询 有的话直接对原文那三个变量进行赋值
-      return true;
+    async doSearch(title, type) {
+      try {
+        const data = await search({ title, type });
+        if (data.code == 200) {
+          this.searchResult = data.data; // 保留查询到的对象
+          return true;
+        } else if (data.code == 250) {
+          return "add-no-repeat";
+        } else {
+          ElMessage.error("请求查询失败！");
+          return false;
+        }
+      } catch (error) {
+        console.log(error);
+        return false;
+      }
     },
-    doSearchExample(){
-       //查询 有的话直接对原文那三个变量进行赋值
-       return true;
-    },
-    checkEditOK(){
+
+    async checkEditOK(){
       if(this.textTitle===""){
         ElMessage.error("未输入标题！");
         return;
       }
-      if(this.doSearch()){//查询是不是有这个博客，有的话记得赋值过去
-        this.textContentEdit = this.textContent;
-        this.textDescriptionEdit = this.textDescription;
-        this.textTitleEdit = this.textTitle;
+      let res = await this.doSearch(this.textTitle, "blog")
+      if(res){//查询是不是有这个博客，有的话记得赋值过去
+        this.textContent = this.searchResult.content;
+        this.textDescription = this.searchResult.description;
+        this.textTitle = this.searchResult.title;
+        this.textContentEdit = this.searchResult.content;
+        this.textDescriptionEdit = this.searchResult.description;
+        this.textTitleEdit = this.searchResult.title;
         this.isShowEditContent = true;
       }else{
         ElMessage.error("没有对应标题的博客！");
       }
     },
-    checkEditExampleOK(){
+    async checkEditExampleOK(){
       if(this.exampleTitle===""){
         ElMessage.error("未输入标题！");
         return;
       }
-      if(this.doSearchExample()){//查询是不是有这个博客，有的话记得赋值过去
-        this.exampleDescriptionEdit = this.exampleDescription;
-        this.exampleTitleEdit = this.exampleTitle;
+      let res = await this.doSearch(this.exampleTitle, "example");
+      if(res){//查询是不是有这个博客，有的话记得赋值过去
+        this.exampleDescriptionEdit = this.searchResult.description;
+        this.exampleTitleEdit = this.searchResult.title;
+        this.exampleTitle = this.searchResult.title;
+        this.exampleDescription = this.searchResult.description;
         this.isShowExampleEditContent = true;
       }else{
         ElMessage.error("没有对应标题的小实例！");
@@ -520,6 +639,16 @@ export default {
       });
     }).catch((error)=>{
       console.log(error);
+    });
+
+    this.$bus.on('add-mdContent', (data) => {
+      // 处理事件的回调函数
+      this.textContent = data;
+    });
+
+    this.$bus.on('update-mdContent', (data) => {
+      // 处理事件的回调函数
+      this.textContentEdit = data;
     });
   },
 }

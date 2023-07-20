@@ -14,7 +14,7 @@
     "core-js": "^3.8.3",
     "element-plus": "^2.3.1",
     "md-editor-v3": "^4.2.2",
-    "mitt": "^3.0.0",
+    "mitt": "^3.0.1",
     "vue": "^3.2.13",
     "vue-router": "^4.1.6",
     "vuex": "^4.1.0"
@@ -22,6 +22,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
+    "@types/pubsub-js": "^1.8.3",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",

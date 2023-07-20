@@ -17,9 +17,16 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 // 导入vuex
 import store from './store';
 
+// 全局导入事件总线
+import mitt from 'mitt';
+
 var app = createApp(App);
 //全局注册字体图标
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
 app.use(router).use(ElementPlus, { locale }).use(store).mount('#app');//注意use要在mount之前
+
+// 全局注册
+const bus = mitt();
+app.config.globalProperties.$bus = bus;

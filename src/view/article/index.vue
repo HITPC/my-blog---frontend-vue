@@ -73,13 +73,10 @@ export default {
   } */
 
   .article-text-container{
-    position: absolute;
-    top: 20vh;
+    margin: 0 auto;
+    transform: translateY(20vh);
     width: 70vw;
     min-height: 79vh;
-    overflow-wrap: break-word;
-    left: 50%;
-    transform: translateX(-50%);
     background-color: #fff;
   }
 

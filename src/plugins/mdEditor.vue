@@ -8,11 +8,17 @@
 <script>
 import { MdEditor } from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
+
 export default {
   name: 'MdEditorPage',
   props: {
+    type: {
+      type: String,
+      required: true
+    },
     text: {
       type: String,
+      required: false,
       default: ""
     }
   },
@@ -28,19 +34,31 @@ export default {
     
   },
   watch: {
-    text(oldValue, newValue){
-      this.content = newValue;
-    }
+    content(newValue){  
+      if(this.type === "add"){
+        this.$bus.emit('add-mdContent', newValue);
+      }else if(this.type === "edit"){
+        this.$bus.emit('update-mdContent', newValue);
+      }
+      
+    },
   },
   methods: {
     
   },
-  created () {
-    
+  created() {
+    if (this.type === 'edit' && this.text !== '') {
+      this.content = this.text;
+    }
   },
+
   mounted () {
     
   },
+  beforeUnmount(){
+    this.$bus.off("add-mdContent");
+    this.$bus.off("update-mdContent");
+  }
 }
 </script>
 
