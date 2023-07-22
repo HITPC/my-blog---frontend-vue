@@ -16,6 +16,7 @@ import BeautifulLoginPage from "./examplesIn/BeautifulLoginPage";
 import JumpText from "./examplesIn/JumpText";
 import FusionText from "./examplesIn/FusionText";
 import MouseMoveDepthOfField from './examplesIn/MouseMoveDepthOfField';
+import WeiHaiMIPsDecoder from "./examplesIn/WeiHaiMIps";
 
 export default {
   components: {
@@ -28,6 +29,7 @@ export default {
     JumpText,
     FusionText,
     MouseMoveDepthOfField,
+    WeiHaiMIPsDecoder,
   },
   computed: {
     examplesName() {
@@ -58,7 +60,10 @@ export default {
           return "FusionText";
         }
         case "64b904b80282de7b71714b12":{
-          return "MouseMoveDepthOfField"
+          return "MouseMoveDepthOfField";
+        }
+        case "64bb87404e6218306bc358fc":{
+          return "WeiHaiMIPsDecoder";
         }
         default: {
           return null

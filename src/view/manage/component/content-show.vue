@@ -507,7 +507,7 @@ export default {
     async deleteExample(){
       //发网络请求
       let res = await this.doSearch(this.exampleTitleToDelete, "example");
-      if(res){
+      if(res && res!=="add-no-repeat"){
         //发网络请求
         deleteExample({
           id: this.searchResult.id
