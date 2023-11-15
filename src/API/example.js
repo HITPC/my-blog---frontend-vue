@@ -34,7 +34,7 @@ export function deleteExample(params) { //post用参数data
 
 export function visitExample(data) { //post用参数data
   return request({
-      url: "/visitExample", //注意请求路径不要写全的 写成这样即可
+      url: "/api/visitExample", //注意请求路径不要写全的 写成这样即可
       method: "post",
       data
   });
