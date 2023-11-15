@@ -38,7 +38,6 @@
 
     <div class="footer-contanier">
       <span>玩的开心！</span>
-      <span><a href="https://space.bilibili.com/28836808?spm_id_from=333.1007.0.0" target="_blank">点击前往PC的B站首页</a></span>
     </div>
   </div>
 </template>
